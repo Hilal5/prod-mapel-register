@@ -117,26 +117,87 @@
         </x-card>
 
         <x-card title="Pengumuman" subtitle="Update terbaru">
-            <div class="space-y-4">
-                <div class="border-l-4 border-blue-500 pl-4 py-2">
-                    <h4 class="font-semibold text-gray-800">Registrasi Semester Baru</h4>
-                    <p class="text-sm text-gray-600 mt-1">Registrasi untuk semester genap dibuka mulai 2 Januari 2026</p>
-                    <p class="text-xs text-gray-500 mt-2">25 Desember 2025</p>
+    <div class="space-y-3">
+        <div class="group border-l-4 border-blue-500 pl-4 py-3 hover:bg-blue-50 transition cursor-pointer rounded-r-lg">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-gray-800">Registrasi Semester Baru</h4>
+                        <span class="px-2 py-0.5 bg-red-500 text-white text-xs rounded-full font-medium">NEW</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2 ml-10">Registrasi untuk semester genap dibuka mulai 2 Januari 2026</p>
+                    <div class="flex items-center gap-4 mt-2 ml-10">
+                        <p class="text-xs text-gray-500">25 Desember 2025</p>
+                        <span class="text-xs text-gray-400">• 234 views</span>
+                    </div>
                 </div>
-
-                <div class="border-l-4 border-green-500 pl-4 py-2">
-                    <h4 class="font-semibold text-gray-800">Libur Tahun Baru</h4>
-                    <p class="text-sm text-gray-600 mt-1">Sekolah libur pada tanggal 31 Desember - 1 Januari</p>
-                    <p class="text-xs text-gray-500 mt-2">23 Desember 2025</p>
-                </div>
-
-                <div class="border-l-4 border-yellow-500 pl-4 py-2">
-                    <h4 class="font-semibold text-gray-800">UTS Semester Genap</h4>
-                    <p class="text-sm text-gray-600 mt-1">Jadwal UTS akan diumumkan minggu depan</p>
-                    <p class="text-xs text-gray-500 mt-2">20 Desember 2025</p>
-                </div>
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
             </div>
-        </x-card>
+        </div>
+
+        <div class="group border-l-4 border-green-500 pl-4 py-3 hover:bg-green-50 transition cursor-pointer rounded-r-lg">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-gray-800">Libur Tahun Baru</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2 ml-10">Sekolah libur pada tanggal 31 Desember - 1 Januari</p>
+                    <div class="flex items-center gap-4 mt-2 ml-10">
+                        <p class="text-xs text-gray-500">23 Desember 2025</p>
+                        <span class="text-xs text-gray-400">• 156 views</span>
+                    </div>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-green-500 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="group border-l-4 border-yellow-500 pl-4 py-3 hover:bg-yellow-50 transition cursor-pointer rounded-r-lg">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-gray-800">UTS Semester Genap</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2 ml-10">Jadwal UTS akan diumumkan minggu depan</p>
+                    <div class="flex items-center gap-4 mt-2 ml-10">
+                        <p class="text-xs text-gray-500">20 Desember 2025</p>
+                        <span class="text-xs text-gray-400">• 89 views</span>
+                    </div>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-yellow-500 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 pt-4 border-t">
+        <x-button href="#" variant="outline" size="sm" class="w-full">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            Lihat Semua Pengumuman
+        </x-button>
+    </div>
+</x-card>
     </div>
 
 </div>

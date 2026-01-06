@@ -27,28 +27,57 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        $request->validate([
+            'login' => 'required|string',
             'password' => 'required',
+        ], [
+            'login.required' => 'NIS/Email/Nama wajib diisi',
+            'password.required' => 'Password wajib diisi',
         ]);
 
+        $login = $request->input('login');
+        $password = $request->input('password');
         $remember = $request->filled('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
+        // Tentukan field login (email, nis, atau name)
+        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-            // Redirect based on role
-            $user = Auth::user();
-            if ($user->isAdmin()) {
-                return redirect()->intended('/admin/dashboard');
+        // Coba login dengan email
+        if ($fieldType === 'email') {
+            if (Auth::attempt(['email' => $login, 'password' => $password], $remember)) {
+                $request->session()->regenerate();
+                return $this->redirectUser();
             }
+        } else {
+            // Coba login dengan NIS atau Nama
+            $user = User::where('nis', $login)
+                        ->orWhere('name', $login)
+                        ->first();
 
-            return redirect()->intended('/dashboard');
+            if ($user && Hash::check($password, $user->password)) {
+                Auth::login($user, $remember);
+                $request->session()->regenerate();
+                return $this->redirectUser();
+            }
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+            'login' => 'NIS/Email/Nama atau password salah.',
+        ])->onlyInput('login');
+    }
+
+    /**
+     * Redirect user based on role
+     */
+    private function redirectUser()
+    {
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            return redirect()->intended('/admin/dashboard');
+        }
+
+        return redirect()->intended('/dashboard');
     }
 
     /**
@@ -96,7 +125,7 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'student', // Default role
+            'role' => 'student',
             'phone' => $validated['phone'] ?? null,
             'gender' => $validated['gender'],
             'birth_date' => $validated['birth_date'] ?? null,

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Schedule;
 use App\Models\SchoolClass;
+use App\Models\Subject;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
@@ -12,41 +14,47 @@ class ScheduleController extends Controller
      * Display a listing of schedules.
      */
     public function index(Request $request)
-    {
-        $query = Schedule::with(['subject', 'class', 'teacher']);
+{
+    $user = Auth::user();
+    $studentGrade = $user->class ? $user->class->grade : null;
 
-        // Filter by class
-        if ($request->filled('class')) {
-            $query->where('class_id', $request->class);
-        }
+    $query = Schedule::with(['subject', 'schoolClass', 'teacher']);
 
-        // Filter by day
-        if ($request->filled('day')) {
-            $query->where('day', $request->day);
-        }
-
-        // Search by subject
-        if ($request->filled('subject')) {
-            $search = $request->subject;
-            $query->whereHas('subject', function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('code', 'like', "%{$search}%");
-            });
-        }
-
-        // Default: current semester and academic year
-        $query->where('semester', 'ganjil')
-              ->where('academic_year', 2025);
-
-        $schedules = $query->orderBy('day')
-                           ->orderBy('start_time')
-                           ->paginate(20);
-
-        // Get all classes for filter dropdown
-        $classes = SchoolClass::active()->orderBy('name')->get();
-
-        return view('schedules.index', compact('schedules', 'classes'));
+    if ($studentGrade && !$request->filled('class')) {
+        $query->whereHas('schoolClass', function($q) use ($studentGrade) {
+            $q->where('grade', $studentGrade);
+        });
     }
+
+    if ($request->filled('class')) {
+        $query->where('class_id', $request->class);
+    }
+
+    if ($request->filled('day')) {
+        $query->where('day', $request->day);
+    }
+
+    // UBAH bagian ini
+    if ($request->filled('subject_id')) {
+        $query->where('subject_id', $request->subject_id);
+    }
+
+    $schedules = $query->orderBy('day')
+                       ->orderBy('start_time')
+                       ->paginate(20);
+
+    $classes = SchoolClass::active()
+        ->when($studentGrade, function($q) use ($studentGrade) {
+            $q->where('grade', $studentGrade);
+        })
+        ->orderBy('name')
+        ->get();
+
+    // TAMBAH ini
+    $subjects = Subject::active()->orderBy('name')->get();
+
+    return view('schedules.index', compact('schedules', 'classes', 'subjects'));
+}
 
     /**
      * Display schedules by class.
@@ -71,7 +79,8 @@ class ScheduleController extends Controller
      */
     public function byDay($day)
     {
-        $schedules = Schedule::with(['subject', 'class', 'teacher'])
+        // ✅ FIXED: 'class' → 'schoolClass'
+        $schedules = Schedule::with(['subject', 'schoolClass', 'teacher'])
                             ->where('day', $day)
                             ->where('semester', 'ganjil')
                             ->where('academic_year', 2025)

@@ -14,53 +14,30 @@ class RegistrationSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ambil siswa kelas 7A (user_id 2-6)
-        $students7A = User::where('class_id', 1)->where('role', 'student')->get();
+        // Ambil semua siswa (18 siswa, 1 per kelas)
+        $students = User::where('role', 'student')->get();
         
-        // Jadwal untuk kelas 7A (schedule_id 1-8)
-        $schedules7A = Schedule::where('class_id', 1)->get();
+        foreach ($students as $student) {
+            // Ambil jadwal sesuai kelas siswa
+            $schedules = Schedule::where('class_id', $student->class_id)
+                                ->where('semester', 'ganjil')
+                                ->where('academic_year', 2025)
+                                ->get();
 
-        // Registrasi siswa kelas 7A ke semua mata pelajaran
-        foreach ($students7A as $student) {
-            foreach ($schedules7A as $schedule) {
+            // Group jadwal berdasarkan subject_id untuk menghindari duplikasi
+            $uniqueSubjects = $schedules->groupBy('subject_id');
+
+            // Registrasi siswa ke 1 jadwal per mata pelajaran
+            foreach ($uniqueSubjects as $subjectId => $subjectSchedules) {
+                // Ambil hanya 1 jadwal pertama untuk mata pelajaran ini
+                $schedule = $subjectSchedules->first();
+                
                 Registration::create([
                     'user_id' => $student->id,
                     'subject_id' => $schedule->subject_id,
                     'schedule_id' => $schedule->id,
                     'status' => 'approved',
                     'registration_date' => now()->subDays(rand(1, 30)),
-                ]);
-            }
-        }
-
-        // Registrasi sebagian siswa kelas 7B
-        $students7B = User::where('class_id', 2)->where('role', 'student')->limit(3)->get();
-        $schedules7B = Schedule::where('class_id', 2)->get();
-
-        foreach ($students7B as $student) {
-            foreach ($schedules7B as $schedule) {
-                Registration::create([
-                    'user_id' => $student->id,
-                    'subject_id' => $schedule->subject_id,
-                    'schedule_id' => $schedule->id,
-                    'status' => rand(0, 1) ? 'approved' : 'pending',
-                    'registration_date' => now()->subDays(rand(1, 20)),
-                ]);
-            }
-        }
-
-        // Registrasi beberapa siswa kelas 8A
-        $students8A = User::where('class_id', 3)->where('role', 'student')->limit(4)->get();
-        $schedules8A = Schedule::where('class_id', 3)->get();
-
-        foreach ($students8A as $student) {
-            foreach ($schedules8A as $schedule) {
-                Registration::create([
-                    'user_id' => $student->id,
-                    'subject_id' => $schedule->subject_id,
-                    'schedule_id' => $schedule->id,
-                    'status' => 'approved',
-                    'registration_date' => now()->subDays(rand(1, 15)),
                 ]);
             }
         }

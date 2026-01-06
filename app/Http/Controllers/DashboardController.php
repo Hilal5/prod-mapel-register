@@ -8,6 +8,7 @@ use App\Models\SchoolClass;
 use App\Models\User;
 use App\Models\Registration;
 use App\Models\Schedule;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -16,6 +17,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        $studentGrade = $user->class ? $user->class->grade : null;
+
         // Ambil data real dari database
         $data = [
             'totalSubjects' => Subject::active()->count(),
@@ -23,8 +27,14 @@ class DashboardController extends Controller
             'totalStudents' => User::student()->count(),
             'activeRegistrations' => Registration::where('status', 'approved')->count(),
             'todaySchedules' => Schedule::where('day', $this->getTodayInIndonesian())
-                                ->with(['subject', 'teacher', 'class'])
-                                ->limit(3)
+                                ->with(['subject', 'teacher', 'schoolClass'])
+                                ->when($studentGrade, function($query) use ($studentGrade) {
+                                    $query->whereHas('schoolClass', function($q) use ($studentGrade) {
+                                        $q->where('grade', $studentGrade);
+                                    });
+                                })
+                                ->orderBy('start_time')
+                                ->limit(5)
                                 ->get(),
         ];
 

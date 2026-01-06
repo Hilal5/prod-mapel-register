@@ -64,4 +64,11 @@ class Teacher extends Model
     {
         return $this->name;
     }
+
+    public function subject()
+{
+    return $this->hasMany(Schedule::class);
+    // atau
+    return $this->belongsToMany(Subject::class, 'teacher_subject');
+}
 }

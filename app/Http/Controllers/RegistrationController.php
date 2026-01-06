@@ -15,22 +15,35 @@ class RegistrationController extends Controller
      * Display registration page with available subjects.
      */
     public function index()
-    {
-        $subjects = Subject::with(['teacher', 'schedules.class'])
-                          ->where('status', 'active')
-                          ->where('semester', 'ganjil')
-                          ->orderBy('name')
-                          ->paginate(9);
+{
+    $user = Auth::user();
+    $studentGrade = $user->class ? $user->class->grade : null;
 
-        // Add registered_count manually
-        foreach ($subjects as $subject) {
-            $subject->registered_count = $subject->registrations()
-                ->where('status', 'approved')
-                ->count();
+    $subjects = Subject::with(['teacher', 'schedules' => function($query) use ($studentGrade) {
+        if ($studentGrade) {
+            $query->whereHas('schoolClass', function($q) use ($studentGrade) {
+                $q->where('grade', $studentGrade);
+            });
         }
+    }, 'schedules.schoolClass'])
+        ->where('status', 'active')
+        // ->where('semester', 'ganjil')  // HAPUS BARIS INI
+        ->when($studentGrade, function($query) use ($studentGrade) {
+            $query->whereHas('schedules.schoolClass', function($q) use ($studentGrade) {
+                $q->where('grade', $studentGrade);
+            });
+        })
+        ->orderBy('name')
+        ->paginate(9);
 
-        return view('registrations.index', compact('subjects'));
+    foreach ($subjects as $subject) {
+        $subject->registered_count = $subject->registrations()
+            ->where('status', 'approved')
+            ->count();
     }
+
+    return view('registrations.index', compact('subjects'));
+}
 
     /**
      * Register student to a subject.
@@ -123,7 +136,7 @@ class RegistrationController extends Controller
     {
         $userId = Auth::id();
 
-        $registrations = Registration::with(['subject', 'schedule.teacher', 'schedule.class'])
+        $registrations = Registration::with(['subject', 'schedule.teacher', 'schedule.schoolClass'])
                                     ->where('user_id', $userId)
                                     ->orderBy('created_at', 'desc')
                                     ->get();

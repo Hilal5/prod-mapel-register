@@ -13,7 +13,7 @@ class AdminScheduleController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Schedule::with(['subject', 'class', 'teacher']);
+        $query = Schedule::with(['subject', 'schoolClass', 'teacher']);
 
         // Filter by class
         if ($request->filled('class_id')) {
@@ -89,7 +89,8 @@ class AdminScheduleController extends Controller
 
     public function edit($id)
     {
-        $schedule = Schedule::findOrFail($id);
+        // Load schedule dengan relasi yang dibutuhkan
+        $schedule = Schedule::with(['subject', 'schoolClass', 'teacher'])->findOrFail($id);
         $subjects = Subject::active()->orderBy('name')->get();
         $classes = SchoolClass::active()->orderBy('name')->get();
         $teachers = Teacher::active()->orderBy('name')->get();
@@ -160,5 +161,25 @@ class AdminScheduleController extends Controller
         return redirect()
             ->route('admin.schedules.index')
             ->with('success', 'Jadwal berhasil dihapus!');
+    }
+
+    // API untuk mendapatkan data kelas (room)
+    public function getClassData($id)
+    {
+        $class = SchoolClass::findOrFail($id);
+        return response()->json([
+            'room' => $class->room,
+            'name' => $class->name,
+        ]);
+    }
+
+    // API untuk mendapatkan data subject (teacher)
+    public function getSubjectData($id)
+    {
+        $subject = Subject::with('teacher')->findOrFail($id);
+        return response()->json([
+            'teacher_id' => $subject->teacher_id,
+            'teacher_name' => $subject->teacher ? $subject->teacher->name : null,
+        ]);
     }
 }

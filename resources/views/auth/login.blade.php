@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'SIAKAD SMP') }} - @yield('title')</title>
     <title>Login - SIAKAD SMP</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
@@ -20,7 +21,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
             </div>
-            <h1 class="text-3xl font-bold text-white">SIAKAD SMP</h1>
+            <h1 class="text-3xl font-bold text-white">SIAKAD SMPN 6 KISARAN</h1>
             <p class="text-blue-100 mt-2">Sistem Informasi Akademik</p>
         </div>
 
@@ -61,24 +62,29 @@
             <form method="POST" action="{{ url('/login') }}">
                 @csrf
 
-                <!-- Email -->
+                <!-- NIS/Email/Nama -->
                 <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <label for="login" class="block text-sm font-medium text-gray-700 mb-2">
+                        NIS / Email / Nama
+                    </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
-                        <input type="email" 
-                               id="email" 
-                               name="email" 
-                               value="{{ old('email') }}"
+                        <input type="text" 
+                               id="login" 
+                               name="login" 
+                               value="{{ old('login') }}"
                                required 
                                autofocus
                                class="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="nama@email.com">
+                               placeholder="Masukkan NIS, Email, atau Nama">
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">
+                        Contoh: 24001 atau ahmad.fauzi@student.smp.sch.id atau Ahmad Fauzi
+                    </p>
                 </div>
 
                 <!-- Password -->
@@ -125,14 +131,17 @@
                 </p>
             </div>
 
+
             <!-- Demo Credentials -->
-            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-                <p class="text-xs font-semibold text-gray-700 mb-2">Demo Credentials:</p>
+            <!-- <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p class="text-xs font-semibold text-gray-700 mb-2">💡 Info Login:</p>
                 <div class="space-y-1 text-xs text-gray-600">
                     <p><strong>Admin:</strong> admin@smp.sch.id / password</p>
-                    <p><strong>Siswa:</strong> ahmad.rizki@student.smp.sch.id / password</p>
+                    <p><strong>Siswa (NIS):</strong> 24001 / password</p>
+                    <p><strong>Siswa (Email):</strong> ahmad.fauzi@student.smp.sch.id / password</p>
+                    <p><strong>Siswa (Nama):</strong> Ahmad Fauzi / password</p>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- Back to Home -->

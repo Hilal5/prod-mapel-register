@@ -7,6 +7,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminSubjectController;
 use App\Http\Controllers\Admin\AdminTeacherController;
@@ -62,6 +63,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}', [ClassController::class, 'show'])->name('show');
         Route::get('/{id}/siswa', [ClassController::class, 'students'])->name('students');
     });
+
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/settings', [\App\Http\Controllers\ProfileController::class, 'settings'])->name('profile.settings');
+    Route::put('/settings/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    Route::put('/settings/notifications', [\App\Http\Controllers\ProfileController::class, 'updateNotifications'])->name('profile.update-notifications');
     
 });
 
@@ -109,6 +117,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/{id}/edit', [AdminScheduleController::class, 'edit'])->name('edit');
         Route::put('/{id}', [AdminScheduleController::class, 'update'])->name('update');
         Route::delete('/{id}', [AdminScheduleController::class, 'destroy'])->name('destroy');
+        
+        // API Routes untuk auto-fill
+        Route::get('/api/class/{id}', [AdminScheduleController::class, 'getClassData'])->name('api.class');
+        Route::get('/api/subject/{id}', [AdminScheduleController::class, 'getSubjectData'])->name('api.subject');
     });
 
     // Admin Registrations Management

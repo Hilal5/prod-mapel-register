@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TeacherSeeder::class,
             SchoolClassSeeder::class,
-            SubjectSeeder::class,
-            ScheduleSeeder::class,
+            // SubjectSeeder::class,
+            // ScheduleSeeder::class,
             UserSeeder::class,
-            RegistrationSeeder::class,
+            // RegistrationSeeder::class,
         ]);
 
         $this->command->info('✅ Database seeded successfully!');

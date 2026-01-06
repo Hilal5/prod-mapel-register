@@ -28,7 +28,26 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <!-- Kode -->
+                <!-- Nama Mata Pelajaran (Dropdown) -->
+                <div class="md:col-span-2">
+                    <label for="subject_select" class="block text-sm font-medium text-gray-700 mb-2">
+                        Pilih Mata Pelajaran <span class="text-red-500">*</span>
+                    </label>
+                    <select id="subject_select" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">-- Pilih Mata Pelajaran --</option>
+                        <option value="BIND|Bahasa Indonesia">Bahasa Indonesia</option>
+                        <option value="BING|Bahasa Inggris">Bahasa Inggris</option>
+                        <option value="IPA|Ilmu Pengetahuan Alam">Ilmu Pengetahuan Alam</option>
+                        <option value="IPS|Ilmu Pengetahuan Sosial">Ilmu Pengetahuan Sosial</option>
+                        <option value="MTK|Matematika">Matematika</option>
+                        <option value="PAI|Pendidikan Agama Islam">Pendidikan Agama Islam</option>
+                        <option value="SENBUD|Seni Budaya">Seni Budaya</option>
+                        <option value="PJOK|Pendidikan Jasmani, Olahraga, dan Kesehatan">Pendidikan Jasmani, Olahraga, dan Kesehatan</option>
+                    </select>
+                </div>
+
+                <!-- Kode (Auto-filled, Read-only) -->
                 <div>
                     <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
                         Kode Mata Pelajaran <span class="text-red-500">*</span>
@@ -38,15 +57,16 @@
                            name="code" 
                            value="{{ old('code') }}"
                            required
+                           readonly
                            maxlength="10"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('code') border-red-500 @enderror"
-                           placeholder="MTK, IPA, dll">
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('code') border-red-500 @enderror"
+                           placeholder="Otomatis terisi">
                     @error('code')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Nama -->
+                <!-- Nama (Auto-filled, Read-only) -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                         Nama Mata Pelajaran <span class="text-red-500">*</span>
@@ -56,8 +76,9 @@
                            name="name" 
                            value="{{ old('name') }}"
                            required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('name') border-red-500 @enderror"
-                           placeholder="Matematika">
+                           readonly
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('name') border-red-500 @enderror"
+                           placeholder="Otomatis terisi">
                     @error('name')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -187,4 +208,25 @@
     </x-card>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const subjectSelect = document.getElementById('subject_select');
+    const codeInput = document.getElementById('code');
+    const nameInput = document.getElementById('name');
+
+    subjectSelect.addEventListener('change', function() {
+        const value = this.value;
+        
+        if (value) {
+            const [code, name] = value.split('|');
+            codeInput.value = code;
+            nameInput.value = name;
+        } else {
+            codeInput.value = '';
+            nameInput.value = '';
+        }
+    });
+});
+</script>
 @endsection
